@@ -3,14 +3,16 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { GetUserDto } from 'src/users/dto/user-public-data.dto';
+import { IAuth } from './interfaces/auth.interface';
+import { JwtService } from '@nestjs/jwt';
+import { ITokenPayload } from './interfaces/token-payload.interface';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly usersService: UsersService) {}
-
-  regisration(createUserDto: CreateUserDto): void {
-    this.usersService.create(createUserDto);
-  }
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async validateUser(
     username: string,
@@ -24,5 +26,15 @@ export class AuthService {
     }
 
     return null;
+  }
+
+  regisration(createUserDto: CreateUserDto): void {
+    this.usersService.create(createUserDto);
+  }
+
+  login(getUserDto: GetUserDto): IAuth {
+    const payload: ITokenPayload = { ...getUserDto };
+    const token = this.jwtService.sign(payload);
+    return { token };
   }
 }

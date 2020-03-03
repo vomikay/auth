@@ -1,8 +1,9 @@
 import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from '@nestjs/passport';
-import { GetUserDto } from 'src/users/dto/user-public-data.dto';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { IAuth } from './interfaces/auth.interface';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { GetUserDto } from 'src/users/dto/user-public-data.dto';
 
 @Controller()
 export class AuthController {
@@ -13,9 +14,10 @@ export class AuthController {
     this.authService.regisration(createUserDto);
   }
 
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @Post('signin')
-  login(@Request() { user }: { user: GetUserDto }): GetUserDto {
-    return user;
+  login(@Request() req: Express.Request): IAuth {
+    const getUserDto = req.user as GetUserDto;
+    return this.authService.login(getUserDto);
   }
 }
