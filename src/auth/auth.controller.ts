@@ -1,21 +1,21 @@
 import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegistrationDto } from './dto/registration.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { UserData } from 'src/users/interfaces/user-data.interface';
+import { GetUserDto } from 'src/users/dto/user-public-data.dto';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
-  registration(@Body() registrationDto: RegistrationDto): void {
-    this.authService.regisration(registrationDto);
+  registration(@Body() createUserDto: CreateUserDto): void {
+    this.authService.regisration(createUserDto);
   }
 
   @UseGuards(AuthGuard('local'))
   @Post('signin')
-  login(@Request() { user }: { user: UserData }): UserData {
+  login(@Request() { user }: { user: GetUserDto }): GetUserDto {
     return user;
   }
 }
