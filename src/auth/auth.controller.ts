@@ -6,7 +6,7 @@ import { UserData } from 'src/users/interfaces/user-data.interface';
 
 @Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
   registration(@Body() registrationDto: RegistrationDto): void {

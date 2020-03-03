@@ -7,7 +7,7 @@ import { UserData } from 'src/users/interfaces/user-data.interface';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   regisration(registrationDto: RegistrationDto): void {
     this.usersService.create(registrationDto);
