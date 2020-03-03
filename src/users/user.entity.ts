@@ -6,7 +6,6 @@ import { IsNotEmpty } from 'class-validator';
 @Entity()
 export class User implements IUser {
   @PrimaryGeneratedColumn()
-  @IsNotEmpty()
   id: number;
 
   @Column()
