@@ -1,4 +1,4 @@
-export interface ITokenPayload {
+export interface IJwtPayload {
   id: number;
   username: string;
 }

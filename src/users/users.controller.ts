@@ -10,7 +10,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('info')
   async getUserData(@Request() { user }: { user: UserDto }): Promise<UserDto> {
-    // eslint-disable-next-line
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...userData } = await this.usersService.findOne(
       user.username,
     );

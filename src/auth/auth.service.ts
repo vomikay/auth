@@ -3,9 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UserDto } from 'src/users/dto/user.dto';
-import { IAuth } from './interfaces/auth.interface';
+import { ILoginResponse } from './interfaces/login-response.interface';
 import { JwtService } from '@nestjs/jwt';
-import { ITokenPayload } from './interfaces/token-payload.interface';
+import { IJwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +21,8 @@ export class AuthService {
     const user = await this.usersService.findOne(username);
 
     if (user && argon2.verify(user.password, password)) {
-      const { password, ...userData } = user; // eslint-disable-line
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...userData } = user;
       return userData;
     }
 
@@ -32,8 +33,8 @@ export class AuthService {
     this.usersService.create(createUserDto);
   }
 
-  login(getUserDto: UserDto): IAuth {
-    const payload: ITokenPayload = { ...getUserDto };
+  login(getUserDto: UserDto): ILoginResponse {
+    const payload: IJwtPayload = { ...getUserDto };
     const token = this.jwtService.sign(payload);
     return { token };
   }
