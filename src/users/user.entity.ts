@@ -1,6 +1,6 @@
 import * as argon2 from 'argon2';
 import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from 'typeorm';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsEmail } from 'class-validator';
 
 @Entity()
 export class User {
@@ -16,6 +16,20 @@ export class User {
   @IsString()
   @Column()
   password: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Column()
+  firstName: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Column()
+  lastName: string;
+
+  @IsEmail()
+  @Column()
+  email: string;
 
   @BeforeInsert()
   async hashPassword(): Promise<void> {
