@@ -33,8 +33,8 @@ export class AuthService {
     this.usersService.create(createUserDto);
   }
 
-  login(getUserDto: UserDto): ILoginResponse {
-    const payload: IJwtPayload = { ...getUserDto };
+  login(userDto: UserDto): ILoginResponse {
+    const payload: IJwtPayload = { ...userDto };
     const token = this.jwtService.sign(payload);
     return { token };
   }
