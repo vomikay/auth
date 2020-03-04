@@ -34,7 +34,10 @@ export class AuthService {
   }
 
   login(userDto: UserDto): ILoginResponse {
-    const payload: IJwtPayload = { ...userDto };
+    const payload: IJwtPayload = {
+      id: userDto.id,
+      username: userDto.username,
+    };
     const token = this.jwtService.sign(payload);
     return { token };
   }
