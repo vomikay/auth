@@ -1,23 +1,33 @@
-import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, Body, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { ILoginResponse } from './interfaces/login-response.interface';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { UserDto } from 'src/users/dto/user.dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { TRequestWithUser, TRequestWithJwt } from 'src/types/request';
 
-@Controller()
+@Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
-  registration(@Body() createUserDto: CreateUserDto): void {
-    this.authService.regisration(createUserDto);
+  async signUp(@Body() createUserDto: CreateUserDto): Promise<{ id: string }> {
+    const user = await this.authService.signUp(createUserDto);
+    return { id: user.id };
   }
 
   @UseGuards(LocalAuthGuard)
   @Post('signin')
-  login(@Request() req: Express.Request): ILoginResponse {
-    const userDto = req.user as UserDto;
-    return this.authService.login(userDto);
+  async signIn(@Req() request: TRequestWithUser): Promise<{ token: string }> {
+    const { user } = request;
+    return { token: await this.authService.signIn(user) };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('signout')
+  signOut(@Req() request: TRequestWithJwt): void {
+    const {
+      user: { jti },
+    } = request;
+    this.authService.signOut(jti);
   }
 }
